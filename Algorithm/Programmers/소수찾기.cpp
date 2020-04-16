@@ -1,13 +1,8 @@
 #include <iostream>
 #include <string>
-#include <vector>
-#include <set>
-#include <queue>
+#include <algorithm>
 
 using namespace std;
-
-vector<char> numberVector;
-set<int> primeNumbers;
 
 bool checkPrimeNumber(int _Number)
 {
@@ -16,27 +11,6 @@ bool checkPrimeNumber(int _Number)
 			return false;
 
 	return true;
-}
-
-void combinationNumber(int _Depth, string _String, queue<int> _Indexs)
-{
-	if (_Depth == 0) return;
-
-	queue<int> nextIndex = _Indexs;
-	int Index = 0, primeNumber = 0;
-	while (!_Indexs.empty())
-	{
-		Index = _Indexs.front();
-		_Indexs.pop();
-		nextIndex.pop();
-
-		string newString(_String + numberVector[Index]);
-		primeNumber = stoi(newString);
-		if(checkPrimeNumber(primeNumber))
-			primeNumbers.insert(primeNumber);
-		combinationNumber(_Depth - 1, newString, nextIndex);
-		nextIndex.push(Index);
-	}
 }
 
 bool checkPermutation(int _primeNumber, string _Numbers)
