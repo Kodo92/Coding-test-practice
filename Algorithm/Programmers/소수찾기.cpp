@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <queue>
 
 using namespace std;
 
@@ -10,38 +11,81 @@ set<int> primeNumbers;
 
 bool checkPrimeNumber(int _Number)
 {
-	if (_Number <= 1) return false;
-	if (_Number == 2 || _Number == 3) return true;
-	if (_Number % 2 != 0 && _Number % 3 != 0) return true;
-	return false;
+	for (int i = 2; i*i <= _Number; i++)
+		if (_Number % i == 0)
+			return false;
+
+	return true;
 }
 
-int combinationNumber(int _Depth, string _String, int _numberPos)
+void combinationNumber(int _Depth, string _String, queue<int> _Indexs)
 {
-	if (_Depth == 0) return 0;
+	if (_Depth == 0) return;
 
-	int answer = 0, primeNumber =0;
-	for (int i = 0; i < numberVector.size(); i++)
+	queue<int> nextIndex = _Indexs;
+	int Index = 0, primeNumber = 0;
+	while (!_Indexs.empty())
 	{
-		if (i == _numberPos) continue;
-		string newString = _String + numberVector[i];
+		Index = _Indexs.front();
+		_Indexs.pop();
+		nextIndex.pop();
+
+		string newString(_String + numberVector[Index]);
 		primeNumber = stoi(newString);
-		if (checkPrimeNumber(primeNumber))
+		if(checkPrimeNumber(primeNumber))
 			primeNumbers.insert(primeNumber);
-		combinationNumber(_Depth - 1, newString, i);
+		combinationNumber(_Depth - 1, newString, nextIndex);
+		nextIndex.push(Index);
 	}
+}
+
+bool checkPermutation(int _primeNumber, string _Numbers)
+{
+	bool findFlag = false;
+	string newString = to_string(_primeNumber);
+	for (int i = 0; i < newString.size(); i++)
+	{
+		findFlag = false;
+		for (int j = 0; j < _Numbers.size(); j++)
+		{
+			if (newString[i] == _Numbers[j])
+			{
+				findFlag = true;
+				_Numbers.erase(_Numbers.begin() + j);
+				break;
+			}
+		}
+		if (!findFlag) return false;
+	}
+
+	return true;
 }
 
 int solution(string numbers) {
 	
-	for (int i = 0; i<numbers.size(); i++)
-		numberVector.push_back(numbers[i]);
-	combinationNumber(numberVector.size(), "", -1);
-	return primeNumbers.size();
+	int answer = 0;
+	sort(numbers.begin(), numbers.end());
+	string maxNumberString = "";
+	for(auto i = numbers.rbegin(); i != numbers.rend(); i++)
+		maxNumberString += *i;
+	int maxNumber = stoi(maxNumberString);
+
+	for (int i = 2; i <= maxNumber; i++)
+	{
+		if (checkPrimeNumber(i))
+		{
+			if (checkPermutation(i, numbers))
+			{
+				cout << i << ' ';
+				answer++;
+			}
+		}
+	}
+
+	return answer;
 }
 
 void main()
 {
-
-	cout << solution("011");
+	cout << endl<<solution("71") << endl;
 }
