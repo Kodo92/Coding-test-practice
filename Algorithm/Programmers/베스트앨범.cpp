@@ -26,8 +26,8 @@ vector<int> solution(vector<string> genres, vector<int> plays) {
 		musicScores[genres[i]].push_back(make_pair(plays[i], i));
 	}
 
-	vector<pair<string, int>> genreRanking(genreScores.begin(), genreScores.end());
-	sort(genreRanking.begin(), genreRanking.end(), comp);
+	for (auto i : genreScores)
+		genreRanking[i.second] = i.first;
 
 	for(auto& i : musicScores)
 		sort(i.second.begin(), i.second.end(),comp);
