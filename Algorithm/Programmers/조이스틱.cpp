@@ -80,6 +80,7 @@ int solution(string name) {
 }
 */
 
+/*
 int solution(string name)
 {
 	int answer = 0;
@@ -115,14 +116,53 @@ int solution(string name)
 
 	return answer;
 }
+*/
+
+int solution(string name)
+{
+	int answer = 0;
+	string compare(name.size(),'A');
+
+	int nextPos = 0, leftDirection = 0, rightDirection = 0;
+	
+	while (compare != name)
+	{
+		answer += min(name[nextPos] - 'A', 'Z' + 1 - name[nextPos]);
+		compare[nextPos] = name[nextPos];
+
+		if (compare == name) break;
+
+		for (int i = 1; i < name.size(); i++)
+		{
+			leftDirection = (nextPos - i < 0) ? nextPos + name.size() - i : nextPos - i;
+			rightDirection = (nextPos + i >= name.size()) ? nextPos + i - name.size() : nextPos + i;
+
+			if (compare[rightDirection] != name[rightDirection])
+			{
+				nextPos = rightDirection;
+				answer += i;
+				break;
+			}
+			else if (compare[leftDirection] != name[leftDirection])
+			{
+				nextPos = leftDirection;
+				answer += i;
+				break;
+			}
+			else continue;
+		}
+	}
+
+	return answer;
+}
 
 void main()
 {
-//	cout << solution("JAAZ") << '\n';
-//	cout << solution("AAA") << '\n';
-//	cout << solution("JAZ") << '\n';
-//	cout << solution("ZZZ") << '\n';
-//	cout << solution("BBBBAAAABA") << '\n';
+	cout << solution("JAAZ") << '\n';
+	cout << solution("AAA") << '\n';
+	cout << solution("JAZ") << '\n';
+	cout << solution("ZZZ") << '\n';
+	cout << solution("BBBBAAAABA") << '\n';
 	cout << solution("AABAAAAAAABBB") << '\n';
 
 }
@@ -133,6 +173,10 @@ JAAZ : 11
 AAA : 0
 JZA : 11
 ZZZ : 5
-ABABAAAAABA : 11		-> 왼쪽 ABAB 후 오른쪽순회
-AABAAAAAAABBB : 11
+ABABAAAAABA : 13		-> 왼쪽 ABAB 후 오른쪽순회
+AABAAAAAAABBB : 12
+*/
+
+/*
+마지막 위치 -> 왼쪽 -> 첫번째 위치 : ok
 */
