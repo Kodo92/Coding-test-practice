@@ -37,22 +37,6 @@ bool checkCompleted(string u)
 	return true;
 }
 
-string newString(string u)
-{
-	string str(u);
-	str.erase(0,1);
-	str.pop_back();
-	for (auto& i : str)
-	{
-		if (i == '(')
-			i = ')';
-		else
-			i = '(';
-	}
-	str = '(' + str + ')';
-	return str;
-}
-
 string trans(string p)
 {
 	if (p.size() == 0)
@@ -65,7 +49,19 @@ string trans(string p)
 	if (checkCompleted(u))
 		return u + trans(v);
 	else
-		return newString(u) + trans(v);
+	{
+		string str = '(' + trans(v) + ')';
+		u.erase(0, 1);
+		u.pop_back();
+		for (auto& i : u)
+		{
+			if (i == '(')
+				i = ')';
+			else
+				i = '(';
+		}
+		return str + u;
+	}
 }
 
 string solution(string p) {
