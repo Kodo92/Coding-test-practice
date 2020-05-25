@@ -1,18 +1,17 @@
-#include <iostream>
 #include <string>
-#include <vector>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
 long long solution(int n, vector<int> times) {
-	long long max = times.back() * n, min = times.front();
-	long long mid = (max + min) / 2;
-	long long answer = 0;
+	sort(times.begin(), times.end());
+	long long max = static_cast<long long>(times.back()) * n, min = 1;
+	long long answer = max;
 	while (min <= max)
 	{
-		int sum = 0;
-		mid = (max + min) / 2;
+		long long sum = 0;
+		long long mid = (max + min) / 2;
 
 		for (const auto value : times)
 			sum += mid / value;
@@ -20,15 +19,16 @@ long long solution(int n, vector<int> times) {
 		if (sum >= n)
 		{
 			max = mid - 1;
-			answer = mid;
+			if (answer > mid)
+				answer = mid;
 		}
-		else 
-			min = mid+1;
+		else
+			min = mid + 1;
 	}
-	return mid;
+	return answer;
 }
 
-void main()
-{
-	solution(6, { 7,10});
-}
+/*
+test case 7 : times sort
+test case 8 : max 계산 범위 
+*/
