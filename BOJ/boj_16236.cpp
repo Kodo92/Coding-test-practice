@@ -2,7 +2,17 @@
 	[백준] 16236  아기상어
 		문제 출처 : https://www.acmicpc.net/problem/16236
 
+	[풀이 방법] : BFS
+		1. 현재 아기 상어 위치에서 먹을 수 있는 물고기들의 최단거리를 BFS 방식을 이용해 구한다.
+			- 먹을 수 있는 물고기의 거리, 좌표를 우선순위 큐에 넣어준다.
+			- 우선순위 큐가 비었을 경우 : 먹을 수 있는게 없음 / 우선순위 큐가 !empty()일 경우 : top() 리턴
 
+	[과정]
+		1. 런타임 에러
+			- 먹을 수 있는 물고기들의 거리를 각각 물고기 마다 BFS로 거리를 계산하여 BFS 작업이 과해진 것이 원인이었다.
+				: 전체 공간에서 먹을 수 있는 물고기들을 모두 찾고 가장 가까운 곳에 있는 개체를 리턴하는 것으로 수정.
+
+	[풀이 일자] : 2020.07.17
 */
 
 #include <iostream>
@@ -22,18 +32,8 @@ public:
 position sharkPos;
 int N;
 int answer, nowSize, eatCount;
+
 std::pair<int, int> dir[]{ {-1,0},{1,0},{0,-1},{0,1} };
-
-void debug(const std::deque<std::deque<int>>& space)
-{
-	for (const auto& i : space) {
-		for (const auto& j : i)
-			std::cout << j << ' ';
-		std::cout << '\n';
-	}
-	std::cout << "Answer : " << answer << ", Size : " << nowSize << ", Count : " << eatCount << "\n\n";
-}
-
 
 struct cmp {
 	bool operator() (const std::pair<int, position>& a, const std::pair<int, position>& b) {
@@ -54,10 +54,12 @@ bool isMove(const position& pos)
 	return false;
 }
 
-int getDistance(const std::deque<std::deque<int>>& space, const position& destPos)
+std::pair<int, position> BFS(const std::deque<std::deque<int>>& space)
 {
 	std::deque<std::deque<bool>> isUsed(N, std::deque<bool>(N, false));
+	std::priority_queue<std::pair<int, position>, std::vector<std::pair<int, position>>, cmp> fish;
 	std::priority_queue<std::pair<int, position>, std::vector<std::pair<int, position>>, cmp> q;
+
 	q.push({ 0,sharkPos });
 	isUsed[sharkPos.y][sharkPos.x] = true;
 
@@ -66,9 +68,6 @@ int getDistance(const std::deque<std::deque<int>>& space, const position& destPo
 		auto top = q.top();
 		q.pop();
 
-		if (top.second.y == destPos.y && top.second.x == destPos.x)
-			return top.first;
-
 		int newCost = top.first + 1;
 		for (int i = 0; i < 4; i++)
 		{
@@ -76,12 +75,20 @@ int getDistance(const std::deque<std::deque<int>>& space, const position& destPo
 			newPos.addPos(dir[i].first, dir[i].second);
 			if (isMove(newPos) && !isUsed[newPos.y][newPos.x] && space[newPos.y][newPos.x] <= nowSize)
 			{
+				if (space[newPos.y][newPos.x] < nowSize && space[newPos.y][newPos.x] != 0)
+					fish.push({ newCost,newPos });
+
 				q.push({ newCost, newPos });
 				isUsed[newPos.y][newPos.x] = true;
 			}
 
 		}
 	}
+
+	if (fish.empty())
+		return{ 0,{-1,-1} };
+	else
+		return fish.top();
 }
 
 int main()
@@ -92,7 +99,6 @@ int main()
 
 	std::cin >> N;
 
-	std::deque<std::deque<position>> fishPosition(7, std::deque<position>());
 	std::deque<std::deque<int>> space(N, std::deque<int>(N));
 	for (int i = 0; i < N; i++)
 	{
@@ -102,9 +108,10 @@ int main()
 			if (space[i][j] != 0)
 			{
 				if (space[i][j] == 9)
+				{
 					sharkPos = { i,j };
-				else
-					fishPosition[space[i][j]].push_back({ i,j });
+					space[i][j] = 0;
+				}
 			}
 		}
 	}
@@ -113,31 +120,15 @@ int main()
 
 	while (true)
 	{
-		std::priority_queue<std::pair<int, position>, std::vector<std::pair<int, position>>, cmp> q;
-		for (int i = 1; i < nowSize && i < fishPosition.size(); i++)
-		{
-			for (auto& pos : fishPosition[i])
-				q.push({ getDistance(space,pos),pos });
-		}
+		std::pair<int,position> retVal = BFS(space);
 
-		if (q.empty())
+		if (retVal.second.y == -1 && retVal.second.x	== -1)
 			break;
 
-		auto eat = q.top();
-		answer += eat.first;
+		answer += retVal.first;
 
-		std::deque<position>& deletePos = fishPosition[space[eat.second.y][eat.second.x]];
-		for (auto val = deletePos.begin(); val != deletePos.end(); val++)
-		{
-			if (val->y == eat.second.y && val->x == eat.second.x)
-			{
-				fishPosition[space[eat.second.y][eat.second.x]].erase(val);
-				break;
-			}
-		}
+		sharkPos = retVal.second;
 		space[sharkPos.y][sharkPos.x] = 0;
-		sharkPos = eat.second;
-		space[sharkPos.y][sharkPos.x] = 9;
 		eatCount++;
 		if (eatCount == nowSize)
 		{
