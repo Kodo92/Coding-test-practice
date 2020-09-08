@@ -2,7 +2,6 @@
 	[프로] 셔틀버스
 		문제 출처 : https://programmers.co.kr/learn/courses/30/lessons/17678
 		비고 : 2018 카카오 블라인드 공개채용
-
 */
 
 #include <iostream>
@@ -46,7 +45,7 @@ string solution(int n, int t, int m, vector<string> timetable) {
 
 	string busTime = "09:00";
 	int loopStartIndex = 0;
-	for (int i = 0; i < n-1; i++)
+	for (int i = 0; i < n - 1; i++)
 	{
 		for (int j = 0; j < m; j++, loopStartIndex++)
 		{
@@ -61,18 +60,17 @@ string solution(int n, int t, int m, vector<string> timetable) {
 	if (timetable.size() - loopStartIndex >= m)
 	{
 		int count = 0;
-		for ( count = 0; count < m; count++ ,loopStartIndex++)
+		for (count = 0; count < m; count++)
 		{
 			if (timetable[loopStartIndex] > busTime)
 				break;
+			loopStartIndex++;
 		}
 
-		if (count < m-1)
-			answer = busTime;
-		else
+		if (count == m)
 		{
-			if (loopStartIndex == timetable.size())
-				loopStartIndex--;
+			loopStartIndex--;
+
 			string tempStr = timetable[loopStartIndex];
 			int hour = stoi(tempStr);
 			int min = stoi(tempStr.substr(3, 2));
@@ -91,7 +89,7 @@ string solution(int n, int t, int m, vector<string> timetable) {
 			answer += to_string(min);
 		}
 	}
-	else
+	if(answer =="")
 		answer = busTime;
 
 	return answer;
@@ -99,9 +97,9 @@ string solution(int n, int t, int m, vector<string> timetable) {
 
 int main()
 {
-	solution(2, 10, 2, { "09:10", "09:09", "08:00" });
+	//solution(2, 10, 2, { "09:10", "09:09", "08:00" });
 	//solution(1,1, 1, { "23:59"});
 	//solution(10, 60, 45, { "23:59","23:59","23:59","23:59","23:59","23:59","23:59","23:59","23:59","23:59","23:59","23:59","23:59","23:59","23:59","23:59" });
-	//solution(1, 10, 3, { "09:10", "09:09", "09:00" });
+	cout<<solution(1, 10, 3, { "09:10", "09:09", "09:00" });
 	return 0;
 }
