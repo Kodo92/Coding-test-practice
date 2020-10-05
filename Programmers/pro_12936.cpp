@@ -6,36 +6,31 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
-long long factorial(int n) {
-    if (n == 1)
-        return 1;
-    return n * factorial(n - 1);
+int fact_n(int n) {
+    if (n == 1) return n;
+    return n * fact_n(n - 1);
+}
+
+void fnc(vector<int>& answer, vector<int>& number, long long k, long long n_1, int n) {
+    if (number.size() == 1) return;
+    long long quo = k / n_1;  //2
+    long long rem = k % n_1;  //rem = k
+    n_1 /= n;   //n_1 = n_1, n = n - 1;
+    answer.emplace_back(number[quo]);
+    number.erase(number.begin() + quo);
+    fnc(answer, number, rem, n_1, n - 1);
 }
 
 vector<int> solution(int n, long long k) {
-    int divided = factorial(n) / n;
-    int index = k / divided;
-    int count = (k - 1) % divided;
-    vector<int> answer(n);
-    answer[0] = index + 1;
-    int value = 1;
-    for (int i = 1; i < n; i++,value++)
-    {
-        if (value == (index + 1))
-            value++;
-
-        answer[i] = value;
-    }
-
-    do {
-        if (count == 0)
-            return answer;
-        count--;
-    } while (next_permutation(answer.begin(), answer.end()));
+    vector<int> answer, number;
+    long long n_1 = fact_n(n - 1);
+    for (int i = 0; i < n; i++) number.emplace_back(i + 1);
+    fnc(answer, number, k - 1, n_1, n - 1);
+    answer.emplace_back(number[0]);
+    return answer;
 }
 
 int main()
