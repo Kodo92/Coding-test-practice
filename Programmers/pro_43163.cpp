@@ -41,7 +41,7 @@ void DFS(const string begin, map<string,bool> isUsed, const int count)
 }
 
 int solution(string begin, string target, vector<string> words) {
-	answer = words.size();
+	answer = words.size()+1;
 	targetString = target;
 
 	map<string, bool> isUsed;
@@ -50,6 +50,8 @@ int solution(string begin, string target, vector<string> words) {
 
 	DFS(begin,isUsed, 0);
 
+	if (answer == words.size() + 1)
+		return 0;
 	return answer;
 }
 
