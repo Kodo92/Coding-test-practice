@@ -12,44 +12,57 @@ int N = 0;
 
 std::vector<std::vector<int>>& UpMove(std::vector<std::vector<int>> vec)
 {
+	bool isChange = false;
 	for (int i = 0; i < N; i++)
 	{
-		for (int j = 0; j < N - 2; j++)
+		for (int j = 0; j < N - 1; j++)
 		{
-			if (vec[i][j] !=0 && vec[i][j] == vec[i][j + 1])
+			if (vec[j][i] !=0 && vec[j][i] == vec[j+1][i])
 			{
-				vec[i][j] *= 2;
-				vec[i][j + 1] = 0;
+				vec[j][i] *= 2;
+				vec[j+1][i] = 0;
+				isChange = true;
 			}
 		}
 	}
 
+	if (!isChange)
+		return vec;
+
+	// Ä­ ¶¯±â±â
 	for (int i = 0; i < N; i++)
 	{
-		for (int j = 0; j < N - 2; j++)
+		bool isFind = true;
+		for (int j = 0; j < N - 1; j++)
 		{
-			if (vec[i][j] != 0 && vec[i][j] == vec[i][j + 1])
+			if (vec[j][i] != 0) continue;
+
+			for (int k = j+1; k < N - 2; k++)
 			{
-				vec[i][j] *= 2;
-				vec[i][j + 1] = 0;
+				if (vec[k][i] == 0) continue;
+				vec[j][i] = vec[k][i];
+				vec[k][i] = 0;
+				break;
 			}
 		}
 	}
+
+	return vec;
 }
 
 std::vector<std::vector<int>>& DownMove(std::vector<std::vector<int>> vec)
 {
-
+	return vec;
 }
 
 std::vector<std::vector<int>>& RightMove(std::vector<std::vector<int>> vec)
 {
-
+	return vec;
 }
 
 std::vector<std::vector<int>>& LeftMove(std::vector<std::vector<int>> vec)
 {
-
+	return vec;
 }
 
 
