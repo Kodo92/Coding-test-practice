@@ -2,6 +2,7 @@
 	[백준] 2048 (Easy)
 		문제 출처 : https://www.acmicpc.net/problem/12100
 		구현
+		https://www.acmicpc.net/board/view/24061
 */
 
 #include <iostream>
@@ -206,3 +207,24 @@ int main()
 	std::cout << answer;
 	return 0;
 }
+
+/*
+예외 케이스
+
+5
+
+2 2 4 8 16
+
+0 0 0 0 0
+
+0 0 0 0 0
+
+0 0 0 0 0
+
+2 2 4 8 16
+
+=>64
+
+개선 -> +1, -1칸이 아니라 0이 아닌 다음칸.
+
+*/
