@@ -1,53 +1,49 @@
 /*
 	[백준] 2048 (Easy)
 		문제 출처 : https://www.acmicpc.net/problem/12100
-		구현
-		https://www.acmicpc.net/board/view/24061
+		타입 : 구현
+		반례 : https://www.acmicpc.net/board/view/24061
 */
 
 #include <iostream>
 #include <vector>
+#include <queue>
 
 int answer = 2;
 int N = 0;
 
-// return vec 버그.
-
 std::vector<std::vector<int>> UpMove(std::vector<std::vector<int>> vec)
 {
-	bool isChange = false;
+	std::queue<int> q;
+
 	for (int i = 0; i < N; i++)
 	{
-		for (int j = 0; j < N - 1; j++)
+		for (int j = 0; j < N; j++)
 		{
-			if (vec[j][i] !=0 && vec[j][i] == vec[j+1][i])
+			if (vec[j][i] != 0)
 			{
-				vec[j][i] *= 2;
-				vec[j+1][i] = 0;
-				if (answer < vec[j][i])
-					answer = vec[j][i];
-				isChange = true;
+				q.push(vec[j][i]);
+				vec[j][i] = 0;
 			}
 		}
-	}
 
-	if (!isChange)
-		return vec;
-
-	// 칸 땡기기
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < N - 1; j++)
+		int index = 0;
+		while (!q.empty())
 		{
-			if (vec[j][i] != 0) continue;
+			int next_data = q.front();
+			q.pop();
 
-			for (int k = j+1; k <= N - 1; k++)
+			if (vec[index][i] == 0)
+				vec[index][i] = next_data;
+			else if (vec[index][i] == next_data)
 			{
-				if (vec[k][i] == 0) continue;
-				vec[j][i] = vec[k][i];
-				vec[k][i] = 0;
-				break;
+				vec[index][i] *= 2;
+				if (vec[index][i] > answer)
+					answer = vec[index][i];
+				index++;
 			}
+			else
+				vec[++index][i] = next_data;
 		}
 	}
 
@@ -56,39 +52,36 @@ std::vector<std::vector<int>> UpMove(std::vector<std::vector<int>> vec)
 
 std::vector<std::vector<int>> DownMove(std::vector<std::vector<int>> vec)
 {
-	bool isChange = false;
+	std::queue<int> q;
+
 	for (int i = 0; i < N; i++)
 	{
-		for (int j = N-1; j > 0 ; j--)
+		for (int j = N-1; j >=0; j--)
 		{
-			if (vec[j][i] != 0 && vec[j][i] == vec[j - 1][i])
+			if (vec[j][i] != 0)
 			{
-				vec[j][i] *= 2;
-				vec[j - 1][i] = 0;
-				if (answer < vec[j][i])
-					answer = vec[j][i];
-				isChange = true;
+				q.push(vec[j][i]);
+				vec[j][i] = 0;
 			}
 		}
-	}
 
-	if (!isChange)
-		return vec;
-
-	// 칸 땡기기
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = N - 1; j > 0; j--)
+		int index = N-1;
+		while (!q.empty())
 		{
-			if (vec[j][i] != 0) continue;
+			int next_data = q.front();
+			q.pop();
 
-			for (int k = j - 1; k >= 0; k--)
+			if (vec[index][i] == 0)
+				vec[index][i] = next_data;
+			else if (vec[index][i] == next_data)
 			{
-				if (vec[k][i] == 0) continue;
-				vec[j][i] = vec[k][i];
-				vec[k][i] = 0;
-				break;
+				vec[index][i] *= 2;
+				if (vec[index][i] > answer)
+					answer = vec[index][i];
+				index--;
 			}
+			else
+				vec[--index][i] = next_data;
 		}
 	}
 
@@ -97,37 +90,36 @@ std::vector<std::vector<int>> DownMove(std::vector<std::vector<int>> vec)
 
 std::vector<std::vector<int>> RightMove(std::vector<std::vector<int>> vec)
 {
-	bool isChange = false;
+	std::queue<int> q;
+
 	for (int i = 0; i < N; i++)
 	{
-		for (int j = N-1; j > 0; j--)
+		for (int j = N-1; j >= 0; j--)
 		{
-			if (vec[i][j] != 0 && vec[i][j] == vec[i][j - 1])
+			if (vec[i][j] != 0)
 			{
-				isChange = true;
-				vec[i][j] *= 2;
-				if (answer < vec[i][j])
-					answer = vec[i][j];
-				vec[i][j - 1] = 0;
+				q.push(vec[i][j]);
+				vec[i][j] = 0;
 			}
 		}
-	}
 
-	if (!isChange)
-		return vec;
-
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = N - 1; j > 0; j--)
+		int index = N - 1;
+		while (!q.empty())
 		{
-			if (vec[i][j] != 0) continue;
-			for (int k = j - 1; k >= 0; k--)
+			int next_data = q.front();
+			q.pop();
+
+			if (vec[i][index] == 0)
+				vec[i][index] = next_data;
+			else if (vec[i][index] == next_data)
 			{
-				if (vec[i][k] == 0) continue;
-				vec[i][j] = vec[i][k];
-				vec[i][k] = 0;
-				break;
+				vec[i][index] *= 2;
+				if (vec[i][index] > answer)
+					answer = vec[i][index];
+				index--;
 			}
+			else
+				vec[i][--index] = next_data;
 		}
 	}
 
@@ -136,37 +128,36 @@ std::vector<std::vector<int>> RightMove(std::vector<std::vector<int>> vec)
 
 std::vector<std::vector<int>> LeftMove(std::vector<std::vector<int>> vec)
 {
-	bool isChange = false;
+	std::queue<int> q;
+
 	for (int i = 0; i < N; i++)
 	{
-		for (int j = 0; j < N - 1; j++)
+		for (int j = 0; j < N; j++)
 		{
-			if (vec[i][j] != 0 && vec[i][j] == vec[i][j + 1]) 
+			if (vec[i][j] != 0)
 			{
-				isChange = true;
-				vec[i][j] *= 2;
-				if (answer < vec[i][j])
-					answer = vec[i][j];
-				vec[i][j + 1] = 0;
+				q.push(vec[i][j]);
+				vec[i][j] = 0;
 			}
 		}
-	}
 
-	if (!isChange)
-		return vec;
-
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < N - 1; j++)
+		int index =0;
+		while (!q.empty())
 		{
-			if (vec[i][j] != 0) continue;
-			for (int k = j + 1; k <= N - 1; k++)
+			int next_data = q.front();
+			q.pop();
+
+			if (vec[i][index] == 0)
+				vec[i][index] = next_data;
+			else if (vec[i][index] == next_data)
 			{
-				if (vec[i][k] == 0) continue;
-				vec[i][j] = vec[i][k];
-				vec[i][k] = 0;
-				break;
+				vec[i][index] *= 2;
+				if (vec[i][index] > answer)
+					answer = vec[i][index];
+				index++;
 			}
+			else
+				vec[i][++index] = next_data;
 		}
 	}
 
@@ -213,7 +204,7 @@ int main()
 
 5
 
-2 2 4 8 16
+2 2 4 8 16	
 
 0 0 0 0 0
 
@@ -227,4 +218,9 @@ int main()
 
 개선 -> +1, -1칸이 아니라 0이 아닌 다음칸.
 
+*/
+
+/*
+	[변경 사항]
+		2020.11.23.	구글링으로 배열을 일일이 순회하는 방법이 아닌 queue를 이용한 방법을 찾음. N^3보다 N^2가 효율적이라고 생각.
 */
