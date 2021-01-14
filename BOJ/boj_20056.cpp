@@ -112,18 +112,6 @@ void Merge()
 	}
 }
 
-void Print(const int count)
-{
-	std::cout << "------------" << count << "------------" << '\n';
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < N; j++)
-		{
-			std::cout << (*map)[i][j].size() << ' ';
-		}
-		std::cout << '\n';
-	}
-}
 int main()
 {
 	std::cin.tie(0);
@@ -138,9 +126,7 @@ int main()
 	 for (int i = 0; i < K; i++)
 	 {
 		 Move();
-		 Print(i + 1);
 		 Merge();
-
 	 }
 
 	 int answer = 0;
