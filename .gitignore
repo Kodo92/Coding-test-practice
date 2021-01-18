@@ -1,0 +1,7 @@
+# CODING TEST PRACTICE CONFIG
+
+#JAVA
+.idea/
+*.jar
+*.class
+*.iml
