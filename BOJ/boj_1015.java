@@ -1,37 +1,43 @@
 import java.util.*;
 
+class Node implements Comparable<Node> {
+    private final int index;
+    private final int value;
+
+    public Node(int index, int value) {
+        this.index = index;
+        this.value = value;
+    }
+
+    public int getIndex()
+    {
+        return index;
+    }
+    @Override
+    public int compareTo(Node compared) {
+        if(this.value == compared.value) {
+            return (this.index < compared.index) ? -1 : 1;
+        }
+        return (this.value < compared.value) ? -1 : 1;
+    }
+}
+
 public class boj_1015 {
     static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
         int N = sc.nextInt();
-        ArrayList array = new ArrayList();
-        ArrayList sorted = new ArrayList();
+        ArrayList<Node> array = new ArrayList<Node>();
         for(int i=0;i<N;i++)
-        {
-            int temp = sc.nextInt();
-            array.add(temp);
-            sorted.add(temp);
-        }
+            array.add(new Node(i,sc.nextInt()));
 
-        Collections.sort(sorted);
+        Collections.sort(array);
+
         int[] answer = new int[N];
-        int count = 0;
         for(int i=0;i<N;i++)
-        {
-            int compared = (int)sorted.get(i);
-            for(int j=0;j<N;j++)
-            {
-                if((int)array.get(j) == compared) {
-                    array.set(j, -1);
-                    answer[j] = count;
-                    count++;
-                    break;
-                }
-            }
-        }
+            answer[array.get(i).getIndex()] = i;
 
-        for(int i=0;i<N;i++)
-            System.out.print(""+ answer[i]+" ");
+        for(int a : answer)
+            System.out.print(""+a+" ");
     }
 }
