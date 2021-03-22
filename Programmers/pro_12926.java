@@ -10,14 +10,10 @@ public class pro_12926 {
         for(int i=0;i<s.length();i++)
         {
             answer[i] = s.charAt(i);
-            char temp = answer[i];
-            if(answer[i] == ' ') continue;
-            answer[i] += n;
-            if(temp >= 'a' && temp <= 'z' && answer[i] > 'z') {
-                answer[i] = (char)((answer[i] % 'z') + 'a'-1);
-            } else if(temp <= 'A' && temp >= 'Z'&& answer[i] > 'Z'){
-                answer[i] = (char)((answer[i] % 'Z') + 'A'-1);
-            }
+            if(answer[i]==' ')
+                continue;
+            char temp = Character.isLowerCase(answer[i]) ? 'a' : 'A';
+            answer[i] = (char)(temp + (answer[i] + n - temp)%26);
         }
 
         return String.valueOf(answer);
