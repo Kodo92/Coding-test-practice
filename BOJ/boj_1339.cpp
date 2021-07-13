@@ -4,7 +4,7 @@
 #include <map>
 #include <cctype>
 #include <string>
-
+/*
 int main() {
 
 	std::cin.tie(0);
@@ -14,10 +14,8 @@ int main() {
 	std::cin >> N;
 
 	std::vector<std::string> words(N);
-	std::vector<int> lengths(N);
 	while (N--) {
 		std::cin >> words[N];
-		lengths[N] = words[N].size();
 	}
 
 	struct  {
@@ -63,14 +61,14 @@ int main() {
 		}
 	}
 
-	int answer = 0;
+	long long answer = 0;
 	for (std::string i : words)
-		answer += std::stoi(i);
+		answer += std::stoll(i);
 
 	std::cout << answer;
 	return 0;
 }
-
+*/
 /*
 10
 ABB
@@ -84,3 +82,49 @@ BB
 BB
 BB
 */
+
+int main() {
+	std::cin.tie(0);
+	std::ios::sync_with_stdio(false);
+
+	int N = 0;
+	std::cin >> N;
+
+	std::vector<std::string> words(N);
+	while (N--) {
+		std::cin >> words[N];
+	}
+
+	std::map<char, int> counts;
+	for (int i = 0; i < words.size(); i++) {
+		int quot = 1;
+		for (int j = words[i].size()-1; j >= 0; j--, quot *= 10) {
+			counts[words[i][j]] += quot;
+		}
+	}
+
+	std::multimap<int, char, std::greater<int>> alpabets;
+	for (auto& i : counts) {
+		alpabets.insert({ i.second, i.first });
+	}
+
+	char number = '9';
+	for (auto& i : alpabets) {
+		//std::string source =);
+		for (std::string& str : words) {
+			for (char& c : str) {
+				if (c == i.second)
+					c = number;
+			}
+		}
+		number--;
+	}
+
+	long long answer = 0;
+	for (std::string& str : words)
+		answer += std::stoll(str);
+
+	std::cout << answer;
+
+
+}
