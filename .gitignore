@@ -2,6 +2,7 @@
 
 #JAVA
 .idea/
+src/
 *.jar
 *.class
 *.iml
