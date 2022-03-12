@@ -6,3 +6,9 @@ src/
 *.jar
 *.class
 *.iml
+
+#C++
+Coding-test-practice/
+x64/
+.vs/
+*.sln
