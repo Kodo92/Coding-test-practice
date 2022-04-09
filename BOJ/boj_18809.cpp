@@ -40,7 +40,7 @@ int BFS(std::vector<std::vector<int>>& garden, std::queue<node>& queue) {
 		int nextIdx = (qIdx + 1) % 2;
 		cost++;
 		while (!qVec[qIdx].empty()) {
-			node& now = qVec[qIdx].front();
+			node now = qVec[qIdx].front();
 			qVec[qIdx].pop();
 
 			isVisited[now.yPos][now.xPos] = true;
